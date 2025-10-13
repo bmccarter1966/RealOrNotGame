@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,10 +18,19 @@
     Question <span id="qNum"></span> of <span id="qTotal"></span>
   </div>
   <div id="messageBox"></div>
-  <button id="btnReal">Real</button>
-  <button id="btnNot">Not</button>
-  <div id="explanation" class="hidden"></div>
-  <button id="nextBtn" disabled>Next</button>
+
+  <!-- Real/Not buttons container -->
+  <div id="real-fake-container" style="display:flex; gap:20px; justify-content:center; margin-top:15px;">
+    <button id="btnReal">Real</button>
+    <button id="btnNot">Not</button>
+  </div>
+
+  <!-- Next button container (centered below Real/Not buttons) -->
+  <div id="next-container" style="text-align:center; margin-top:15px;">
+    <button id="nextBtn" disabled style="display:none;">Next</button>
+  </div>
+
+  <div id="explanation" class="hidden" style="margin-top:15px;"></div>
 </div>
 
 <div id="endScreen" class="hidden">
