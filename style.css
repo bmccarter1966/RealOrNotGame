@@ -8,6 +8,7 @@ body {
   font-family: Arial, sans-serif;
   color: #fff;
   text-align: center;
+  border: 5px solid yellow; /* 🔹 debug: check if body is applied */
 }
 
 /* Hide elements */
@@ -24,18 +25,22 @@ body {
   height: 100vh;
   text-align: center;
   padding: 20px;
+  border: 3px dashed red; /* 🔹 debug: check container boundaries */
+  background-color: rgba(255,255,255,0.05); /* semi-transparent overlay to see gradient */
 }
 
 /* Message box */
 #messageBox {
   margin: 20px;
   font-size: 1.2em;
+  border: 2px solid green; /* 🔹 debug: confirm message box renders */
 }
 
 /* Explanation text */
 #explanation {
   margin-top: 10px;
   font-size: 0.9em;
+  border: 1px solid blue; /* 🔹 debug */
 }
 
 /* General button styles */
@@ -47,6 +52,7 @@ button {
   border-radius: 5px;
   font-size: 1em;
   transition: background-color 0.2s ease;
+  outline: 2px solid pink; /* 🔹 debug: see buttons */
 }
 
 /* Button hover effect */
@@ -77,4 +83,5 @@ button:hover {
   font-size: 80px;
   color: #4CAF50;
   margin-bottom: 15px;
+  border: 2px dashed orange; /* 🔹 debug: confirm check mark renders */
 }
