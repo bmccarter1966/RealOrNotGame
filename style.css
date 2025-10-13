@@ -1,11 +1,10 @@
-/* Full-screen background */
+/* Full-screen gradient background */
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100%;
-  background: url('./assets/background.jpeg') no-repeat center center fixed;
-  background-size: cover;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
   font-family: Arial, sans-serif;
   color: #fff;
   text-align: center;
@@ -71,4 +70,11 @@ button:hover {
 #startBtn {
   background-color: #2196F3;
   color: #fff;
+}
+
+/* End screen checkmark */
+#checkMark {
+  font-size: 80px;
+  color: #4CAF50;
+  margin-bottom: 15px;
 }
