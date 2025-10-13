@@ -1,44 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Real or Not?</title>
-<link rel="stylesheet" href="style.css">
-</head>
 <body>
-<div id="startScreen">
-  <h1>Real or Not?</h1>
-  <p>Test your knowledge of AI, Cyber Security, and Crypto myths!</p>
-  <button id="startBtn">Start Game</button>
-</div>
+  <div id="gameContainer">
+    <div id="startScreen">
+      <h1>Real or Not?</h1>
+      <p>Test your knowledge of AI, Cyber Security, and Crypto myths!</p>
+      <button id="startBtn">Start Game</button>
+    </div>
 
-<div id="questionScreen" class="hidden">
-  <div id="qHeader">
-    Question <span id="qNum"></span> of <span id="qTotal"></span>
+    <div id="questionScreen" class="hidden">
+      <div id="qHeader">
+        Question <span id="qNum"></span> of <span id="qTotal"></span>
+      </div>
+      <div id="messageBox"></div>
+
+      <div id="real-fake-container" style="display:flex; gap:20px; justify-content:center; margin-top:15px;">
+        <button id="btnReal">Real</button>
+        <button id="btnNot">Not</button>
+      </div>
+
+      <div id="next-container" style="text-align:center; margin-top:15px;">
+        <button id="nextBtn" disabled style="display:none;">Next</button>
+      </div>
+
+      <div id="explanation" class="hidden" style="margin-top:15px;"></div>
+    </div>
+
+    <div id="endScreen" class="hidden">
+      <h2 id="scoreTitle"></h2>
+      <p id="scoreMsg"></p>
+      <button id="playAgainBtn">Play Again</button>
+    </div>
   </div>
-  <div id="messageBox"></div>
 
-  <!-- Real/Not buttons container -->
-  <div id="real-fake-container" style="display:flex; gap:20px; justify-content:center; margin-top:15px;">
-    <button id="btnReal">Real</button>
-    <button id="btnNot">Not</button>
-  </div>
-
-  <!-- Next button container (centered below Real/Not buttons) -->
-  <div id="next-container" style="text-align:center; margin-top:15px;">
-    <button id="nextBtn" disabled style="display:none;">Next</button>
-  </div>
-
-  <div id="explanation" class="hidden" style="margin-top:15px;"></div>
-</div>
-
-<div id="endScreen" class="hidden">
-  <h2 id="scoreTitle"></h2>
-  <p id="scoreMsg"></p>
-  <button id="playAgainBtn">Play Again</button>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
-</html>
