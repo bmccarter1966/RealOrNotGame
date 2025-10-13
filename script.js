@@ -103,7 +103,7 @@ function endGame(){
   if(!sharkImg){
     sharkImg = document.createElement('img');
     sharkImg.id = 'sharkEnd';
-    sharkImg.src = 'assets/cyber-shark.png';
+    sharkImg.src = './assets/cyber-shark.png';
     sharkImg.alt = 'Cyber Shark';
     sharkImg.style.maxWidth = '200px';
     sharkImg.style.marginBottom = '15px';
@@ -140,4 +140,3 @@ function enableButtons(ok){
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
