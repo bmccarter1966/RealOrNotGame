@@ -1,9 +1,75 @@
 
-body { font-family: Arial, sans-serif; background: linear-gradient(to right, #0f2027, #203a43, #2c5364); color: #fff; text-align: center; }
-.hidden { display: none; }
-button { padding: 10px 20px; margin: 10px; cursor: pointer; border: none; border-radius: 5px; }
-#btnReal { background-color: #4CAF50; color: #fff; }
-#btnNot { background-color: #f44336; color: #fff; }
-#nextBtn, #playAgainBtn, #startBtn { background-color: #2196F3; color: #fff; }
-#messageBox { margin: 20px; font-size: 1.2em; }
-#explanation { margin-top: 10px; font-size: 0.9em; }
+/* Full-screen background */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100%;
+  background: url('assets/background.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  text-align: center;
+}
+
+/* Hide elements */
+.hidden {
+  display: none;
+}
+
+/* Center all game content */
+#gameContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertical centering */
+  align-items: center;     /* horizontal centering */
+  height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Message box */
+#messageBox {
+  margin: 20px;
+  font-size: 1.2em;
+}
+
+/* Explanation text */
+#explanation {
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+/* General button styles */
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+/* Button hover effect */
+button:hover {
+  opacity: 0.85;
+}
+
+/* Specific buttons */
+#btnReal {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+#btnNot {
+  background-color: #f44336;
+  color: #fff;
+}
+
+#nextBtn,
+#playAgainBtn,
+#startBtn {
+  background-color: #2196F3;
+  color: #fff;
+}
