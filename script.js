@@ -68,7 +68,7 @@ function showQ(){
 
   const nextBtn = document.getElementById('nextBtn');
   nextBtn.disabled = true;
-  nextBtn.style.display = "none"; // hide until answer is chosen
+  nextBtn.style.display = "none";
 
   enableButtons(true);
 }
@@ -85,7 +85,7 @@ function answer(choice){
 
   const nextBtn = document.getElementById('nextBtn');
   nextBtn.disabled = false;
-  nextBtn.style.display = "inline-block"; // show next button
+  nextBtn.style.display = "inline-block";
 }
 
 function nextQ(){
@@ -98,30 +98,26 @@ function endGame(){
   document.getElementById('questionScreen').classList.add('hidden');
   const end = document.getElementById('endScreen');
 
-  // Add Cyber Shark image above score
-  let sharkImg = document.getElementById('sharkEnd');
-  if(!sharkImg){
-    sharkImg = document.createElement('img');
-    sharkImg.id = 'sharkEnd';
-    sharkImg.src = './assets/cyber-shark.png';
-    sharkImg.alt = 'Cyber Shark';
-    sharkImg.style.maxWidth = '200px';
-    sharkImg.style.marginBottom = '15px';
-    end.insertBefore(sharkImg, document.getElementById('scoreTitle'));
+  // Add green check mark above score
+  let checkMark = document.getElementById('checkMark');
+  if(!checkMark){
+    checkMark = document.createElement('div');
+    checkMark.id = 'checkMark';
+    checkMark.textContent = '✔'; // Unicode check mark
+    end.insertBefore(checkMark, document.getElementById('scoreTitle'));
   }
 
   document.getElementById('scoreTitle').textContent = `You scored ${score}/${total}`;
 
   let msg = "Nice work!";
-  if(score === total) msg="Perfect! Cyber Shark!";
-  else if(score >= Math.ceil(total*0.8)) msg="Great job — Cyber Sharp!";
+  if(score === total) msg="Perfect! Excellent!";
+  else if(score >= Math.ceil(total*0.8)) msg="Great job!";
   else if(score >= Math.ceil(total*0.5)) msg="Not bad — keep practicing!";
   else msg="Watch out — more training recommended.";
   document.getElementById('scoreMsg').textContent = msg;
 
   end.classList.remove('hidden');
 
-  // send score to Power Automate if FLOW_URL provided
   if(FLOW_URL && FLOW_URL !== "YOUR_FLOW_URL_HERE"){
     fetch(FLOW_URL,{
       method:"POST",
