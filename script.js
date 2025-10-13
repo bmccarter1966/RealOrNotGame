@@ -97,6 +97,19 @@ function nextQ(){
 function endGame(){
   document.getElementById('questionScreen').classList.add('hidden');
   const end = document.getElementById('endScreen');
+
+  // Add Cyber Shark image above score
+  let sharkImg = document.getElementById('sharkEnd');
+  if(!sharkImg){
+    sharkImg = document.createElement('img');
+    sharkImg.id = 'sharkEnd';
+    sharkImg.src = 'assets/cyber-shark.png';
+    sharkImg.alt = 'Cyber Shark';
+    sharkImg.style.maxWidth = '200px';
+    sharkImg.style.marginBottom = '15px';
+    end.insertBefore(sharkImg, document.getElementById('scoreTitle'));
+  }
+
   document.getElementById('scoreTitle').textContent = `You scored ${score}/${total}`;
 
   let msg = "Nice work!";
@@ -127,3 +140,4 @@ function enableButtons(ok){
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
