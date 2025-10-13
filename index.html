@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real or Not?</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="startScreen">
+  <h1>Real or Not?</h1>
+  <p>Test your knowledge of AI, Cyber Security, and Crypto myths!</p>
+  <button id="startBtn">Start Game</button>
+</div>
+
+<div id="questionScreen" class="hidden">
+  <div id="qHeader">
+    Question <span id="qNum"></span> of <span id="qTotal"></span>
+  </div>
+  <div id="messageBox"></div>
+  <button id="btnReal">Real</button>
+  <button id="btnNot">Not</button>
+  <div id="explanation" class="hidden"></div>
+  <button id="nextBtn" disabled>Next</button>
+</div>
+
+<div id="endScreen" class="hidden">
+  <h2 id="scoreTitle"></h2>
+  <p id="scoreMsg"></p>
+  <button id="playAgainBtn">Play Again</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

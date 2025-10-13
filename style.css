@@ -1,0 +1,9 @@
+
+body { font-family: Arial, sans-serif; background: linear-gradient(to right, #0f2027, #203a43, #2c5364); color: #fff; text-align: center; }
+.hidden { display: none; }
+button { padding: 10px 20px; margin: 10px; cursor: pointer; border: none; border-radius: 5px; }
+#btnReal { background-color: #4CAF50; color: #fff; }
+#btnNot { background-color: #f44336; color: #fff; }
+#nextBtn, #playAgainBtn, #startBtn { background-color: #2196F3; color: #fff; }
+#messageBox { margin: 20px; font-size: 1.2em; }
+#explanation { margin-top: 10px; font-size: 0.9em; }
