@@ -20,36 +20,29 @@ let current = 0;
 let score = 0;
 const total = questions.length;
 let playerName = "";
+const FLOW_URL = ""; // Optional Power Automate URL
 
-const FLOW_URL = "YOUR_FLOW_URL_HERE"; // Power Automate URL
-
-function shuffle(a){
-  for(let i=a.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
 }
 
-function init(){
-  const startBtn = document.getElementById('startBtn');
-  const btnReal = document.getElementById('btnReal');
-  const btnNot = document.getElementById('btnNot');
-  const nextBtn = document.getElementById('nextBtn');
-  const playAgainBtn = document.getElementById('playAgainBtn');
-
-  startBtn.addEventListener('click', startGame);
-  btnReal.addEventListener('click', ()=>answer('Real'));
-  btnNot.addEventListener('click', ()=>answer('Not'));
-  nextBtn.addEventListener('click', nextQ);
-  playAgainBtn.addEventListener('click', startGame);
+function init() {
+  document.getElementById('startBtn').addEventListener('click', startGame);
+  document.getElementById('btnReal').addEventListener('click', () => answer('Real'));
+  document.getElementById('btnNot').addEventListener('click', () => answer('Not'));
+  document.getElementById('nextBtn').addEventListener('click', nextQ);
+  document.getElementById('playAgainBtn').addEventListener('click', startGame);
 }
 
-function startGame(){
-  playerName = prompt("Enter your name for the leaderboard:","");
-  if(!playerName) playerName = "Anonymous";
-  questions = shuffle([...questions]).slice(0,total);
-  current=0; score=0;
+function startGame() {
+  playerName = prompt("Enter your name for the leaderboard:", "") || "Anonymous";
+  questions = shuffle([...questions]);
+  current = 0;
+  score = 0;
   document.getElementById('qTotal').textContent = total;
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('endScreen').classList.add('hidden');
@@ -57,9 +50,9 @@ function startGame(){
   showQ();
 }
 
-function showQ(){
+function showQ() {
   const q = questions[current];
-  document.getElementById('qNum').textContent = current+1;
+  document.getElementById('qNum').textContent = current + 1;
   document.getElementById('messageBox').textContent = q.text;
 
   const explanation = document.getElementById('explanation');
@@ -73,11 +66,11 @@ function showQ(){
   enableButtons(true);
 }
 
-function answer(choice){
+function answer(choice) {
   enableButtons(false);
   const q = questions[current];
   const correct = choice === q.answer;
-  if(correct) score++;
+  if (correct) score++;
 
   const explanation = document.getElementById('explanation');
   explanation.innerHTML = `<strong>${correct ? 'Correct!' : 'Not quite.'}</strong> ${q.explanation}`;
@@ -88,49 +81,51 @@ function answer(choice){
   nextBtn.style.display = "inline-block";
 }
 
-function nextQ(){
+function nextQ() {
   current++;
-  if(current >= total) endGame();
+  if (current >= total) endGame();
   else showQ();
 }
 
-function endGame(){
+function endGame() {
   document.getElementById('questionScreen').classList.add('hidden');
   const end = document.getElementById('endScreen');
 
-  // Add green check mark above score
   let checkMark = document.getElementById('checkMark');
-  if(!checkMark){
+  if (!checkMark) {
     checkMark = document.createElement('div');
     checkMark.id = 'checkMark';
-    checkMark.textContent = '✔'; // Unicode check mark
+    checkMark.textContent = '✔';
     end.insertBefore(checkMark, document.getElementById('scoreTitle'));
   }
 
   document.getElementById('scoreTitle').textContent = `You scored ${score}/${total}`;
 
   let msg = "Nice work!";
-  if(score === total) msg="Perfect! Excellent!";
-  else if(score >= Math.ceil(total*0.8)) msg="Great job!";
-  else if(score >= Math.ceil(total*0.5)) msg="Not bad — keep practicing!";
-  else msg="Watch out — more training recommended.";
+  if (score === total) msg = "Perfect! Excellent!";
+  else if (score >= Math.ceil(total * 0.8)) msg = "Great job!";
+  else if (score >= Math.ceil(total * 0.5)) msg = "Not bad — keep practicing!";
+  else msg = "Watch out — more training recommended.";
   document.getElementById('scoreMsg').textContent = msg;
 
   end.classList.remove('hidden');
 
-  if(FLOW_URL && FLOW_URL !== "YOUR_FLOW_URL_HERE"){
-    fetch(FLOW_URL,{
-      method:"POST",
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({playerName:playerName,score:score,timestamp:new Date().toISOString()})
-    }).then(res=>{
-      const scoreMsg=document.getElementById('scoreMsg');
-      scoreMsg.textContent+=" Your score has been submitted to the leaderboard!";
-    }).catch(err=>{console.warn("Could not send score:",err);});
+  if (FLOW_URL) {
+    fetch(FLOW_URL, {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        playerName: playerName,
+        score: score,
+        timestamp: new Date().toISOString()
+      })
+    }).then(() => {
+      document.getElementById('scoreMsg').textContent += " Your score has been submitted!";
+    }).catch(err => console.warn("Could not send score:", err));
   }
 }
 
-function enableButtons(ok){
+function enableButtons(ok) {
   document.getElementById('btnReal').disabled = !ok;
   document.getElementById('btnNot').disabled = !ok;
 }
