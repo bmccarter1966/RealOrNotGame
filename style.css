@@ -1,49 +1,44 @@
-/* Full-screen gradient background */
+/* Blue gradient background */
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100%;
-  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(to right, #1e3c72, #2a5298);
   font-family: Arial, sans-serif;
   color: #fff;
   text-align: center;
-  border: 5px solid yellow; /* 🔹 debug: check if body is applied */
 }
 
-/* Hide elements */
+/* Game layout */
+#gameContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Hidden class */
 .hidden {
   display: none;
 }
 
-/* Center all game content */
-#gameContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* vertical centering */
-  align-items: center;     /* horizontal centering */
-  height: 100vh;
-  text-align: center;
-  padding: 20px;
-  border: 3px dashed red; /* 🔹 debug: check container boundaries */
-  background-color: rgba(255,255,255,0.05); /* semi-transparent overlay to see gradient */
-}
-
-/* Message box */
+/* Question text */
 #messageBox {
   margin: 20px;
   font-size: 1.2em;
-  border: 2px solid green; /* 🔹 debug: confirm message box renders */
 }
 
 /* Explanation text */
 #explanation {
   margin-top: 10px;
   font-size: 0.9em;
-  border: 1px solid blue; /* 🔹 debug */
 }
 
-/* General button styles */
+/* Buttons */
 button {
   padding: 10px 20px;
   margin: 10px;
@@ -52,15 +47,14 @@ button {
   border-radius: 5px;
   font-size: 1em;
   transition: background-color 0.2s ease;
-  outline: 2px solid pink; /* 🔹 debug: see buttons */
 }
 
-/* Button hover effect */
+/* Hover effect */
 button:hover {
   opacity: 0.85;
 }
 
-/* Specific buttons */
+/* Button colors */
 #btnReal {
   background-color: #4CAF50;
   color: #fff;
@@ -78,10 +72,9 @@ button:hover {
   color: #fff;
 }
 
-/* End screen checkmark */
+/* Checkmark on end screen */
 #checkMark {
   font-size: 80px;
   color: #4CAF50;
   margin-bottom: 15px;
-  border: 2px dashed orange; /* 🔹 debug: confirm check mark renders */
 }
