@@ -1,50 +1,49 @@
 <script>
-// Set release date in EST (UTC-5)
-const RELEASE_DATE = new Date("2026-01-13T00:00:00-05:00"); 
+const RELEASE_DATE = new Date("2026-01-13T00:00:00-05:00");
 const GAME_URL = "https://bmccarter1966.github.io/RealOrNotGame/";
 
 const container = document.getElementById("container");
-let hasLaunched = false;
-let countdownInterval = null;
+const countdownEl = document.getElementById("countdown");
+
+let launched = false;
+
+function launchGame() {
+  if (launched) return;
+  launched = true;
+
+  // Create iframe ONCE
+  const iframe = document.createElement("iframe");
+  iframe.src = GAME_URL;
+  iframe.style.width = "100%";
+  iframe.style.height = "100%";
+  iframe.style.border = "none";
+  iframe.allowFullscreen = true;
+
+  // Replace placeholder image ONLY (safe)
+  const img = document.getElementById("placeholder");
+  img.replaceWith(iframe);
+
+  // Show "Now Live!" then fade (NO DOM REMOVAL)
+  countdownEl.innerText = "Now Live!";
+  setTimeout(() => {
+    countdownEl.classList.add("fade-out");
+  }, 3000);
+}
 
 function updateCountdown() {
-  if (hasLaunched) return;
+  if (launched) return;
 
   const now = new Date();
   const diff = RELEASE_DATE - now;
 
   if (diff <= 0) {
-    hasLaunched = true;
-    clearInterval(countdownInterval);
-
-    container.innerHTML = `
-      <iframe 
-        src="${GAME_URL}" 
-        style="width:100%; height:100%; border:none;" 
-        allowfullscreen 
-        loading="lazy">
-      </iframe>
-      <div class="countdown fade-out" id="liveMessage">Now Live!</div>
-    `;
-
-    // Fade out and remove "Now Live!" message
-    setTimeout(() => {
-      const liveMsg = document.getElementById("liveMessage");
-      if (liveMsg) liveMsg.classList.add("fade-out");
-    }, 3000);
-
-    setTimeout(() => {
-      const liveMsg = document.getElementById("liveMessage");
-      if (liveMsg) liveMsg.remove();
-    }, 5500);
-
+    launchGame();
     return;
   }
 
-  const countdownEl = document.getElementById("countdown");
-  const days = Math.floor(diff / (1000*60*60*24));
-  const hours = Math.floor((diff / (1000*60*60)) % 24);
-  const minutes = Math.floor((diff / (1000*60)) % 60);
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
   const seconds = Math.floor((diff / 1000) % 60);
 
   countdownEl.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
@@ -52,6 +51,5 @@ function updateCountdown() {
 
 // Start countdown
 updateCountdown();
-countdownInterval = setInterval(updateCountdown, 1000);
+setInterval(updateCountdown, 1000);
 </script>
-
