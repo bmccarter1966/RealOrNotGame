@@ -1,101 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RealOrNot - Coming Soon</title>
-<style>
-html, body { 
-  margin:0; 
-  padding:0; 
-  width:100%; 
-  height:100%; 
-  background:#000; 
-  font-family:Arial, sans-serif; 
-}
-.wrapper { 
-  width:100%; 
-  height:100%; 
-  display:flex; 
-  align-items:center; 
-  justify-content:center; 
-  position:relative; 
-  flex-direction: column; 
-}
-img, iframe { 
-  width:100%; 
-  height:100%; 
-  object-fit:contain; 
-  display:block; 
-  border:none; 
-}
-.countdown { 
-  position:absolute; 
-  top:20px; 
-  left:50%; 
-  transform:translateX(-50%); 
-  background: rgba(0,0,0,0.6); 
-  color:#0ff; 
-  font-size:28px; 
-  font-weight:bold; 
-  padding:12px 24px; 
-  border-radius:12px; 
-  text-align:center; 
-  letter-spacing:1px; 
-  z-index:10;
-  transition: opacity 2s ease;
-}
-.countdown.fade-out {
-  opacity: 0;
-}
-@media(max-width:480px){ 
-  .countdown{ 
-    font-size:20px; 
-    padding:8px 16px; 
-  } 
-}
-</style>
-</head>
-<body>
-
-<div class="wrapper" id="container">
-  <img id="placeholder" src="https://raw.githubusercontent.com/bmccarter1966/RealOrNotGame/de6912fa0b3caf85f0f956a151cddc8fc0aa6a74/content%20coming%20soon%20for%20games.png" alt="Content Coming Soon">
-  <div class="countdown" id="countdown">Loading...</div>
-</div>
-
 <script>
 // Set release date in EST (UTC-5)
 const RELEASE_DATE = new Date("2026-01-13T00:00:00-05:00"); 
 const GAME_URL = "https://bmccarter1966.github.io/RealOrNotGame/";
-const countdownEl = document.getElementById("countdown");
+
 const container = document.getElementById("container");
+let hasLaunched = false;
+let countdownInterval = null;
 
 function updateCountdown() {
+  if (hasLaunched) return;
+
   const now = new Date();
   const diff = RELEASE_DATE - now;
 
   if (diff <= 0) {
-    // Add the iframe behind the countdown
-    container.innerHTML = `<iframe src="${GAME_URL}" style="width:100%; height:100%; border:none;" allowfullscreen loading="lazy"></iframe>
-                           <div class="countdown" id="countdown">Now Live!</div>`;
-    
-    const liveCountdown = document.getElementById("countdown");
+    hasLaunched = true;
+    clearInterval(countdownInterval);
 
-    // Fade out the countdown after 3 seconds
+    container.innerHTML = `
+      <iframe 
+        src="${GAME_URL}" 
+        style="width:100%; height:100%; border:none;" 
+        allowfullscreen 
+        loading="lazy">
+      </iframe>
+      <div class="countdown fade-out" id="liveMessage">Now Live!</div>
+    `;
+
+    // Fade out and remove "Now Live!" message
     setTimeout(() => {
-      liveCountdown.classList.add("fade-out");
+      const liveMsg = document.getElementById("liveMessage");
+      if (liveMsg) liveMsg.classList.add("fade-out");
     }, 3000);
 
-    // Remove the countdown completely after fade-out
     setTimeout(() => {
-      if (liveCountdown && liveCountdown.parentNode) {
-        liveCountdown.parentNode.removeChild(liveCountdown);
-      }
-    }, 5500); // 2.5s fade + 3s delay
+      const liveMsg = document.getElementById("liveMessage");
+      if (liveMsg) liveMsg.remove();
+    }, 5500);
 
     return;
   }
 
+  const countdownEl = document.getElementById("countdown");
   const days = Math.floor(diff / (1000*60*60*24));
   const hours = Math.floor((diff / (1000*60*60)) % 24);
   const minutes = Math.floor((diff / (1000*60)) % 60);
@@ -104,12 +50,8 @@ function updateCountdown() {
   countdownEl.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 }
 
-// Initial update
+// Start countdown
 updateCountdown();
-
-// Update every second
-setInterval(updateCountdown, 1000);
+countdownInterval = setInterval(updateCountdown, 1000);
 </script>
 
-</body>
-</html>
