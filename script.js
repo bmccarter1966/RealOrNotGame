@@ -17,9 +17,9 @@ const QUESTIONS = [
 let questions = [];
 let current = 0;
 let score = 0;
-const total = QUESTIONS.length;
+let total = QUESTIONS.length;
 const playerName = "Anonymous"; // always anonymous
-const FLOW_URL = ""; // optional Power Automate URL
+const FLOW_URL = ""; // optional
 
 // ================= HELPERS =================
 function shuffle(arr) {
@@ -32,14 +32,20 @@ function shuffle(arr) {
 
 // ================= INIT =================
 function init() {
-  var startBtn = document.getElementById('startBtn');
-  if (!startBtn) return; // safety check if DOM not ready
+  // Make sure all elements exist
+  const startBtn = document.getElementById('startBtn');
+  const btnReal = document.getElementById('btnReal');
+  const btnNot = document.getElementById('btnNot');
+  const nextBtn = document.getElementById('nextBtn');
+  const playAgainBtn = document.getElementById('playAgainBtn');
 
-  startBtn.onclick = startGame;
-  document.getElementById('btnReal').onclick = function() { answer('Real'); };
-  document.getElementById('btnNot').onclick = function() { answer('Not'); };
-  document.getElementById('nextBtn').onclick = nextQ;
-  document.getElementById('playAgainBtn').onclick = startGame;
+  if (!startBtn || !btnReal || !btnNot || !nextBtn || !playAgainBtn) return;
+
+  startBtn.addEventListener('click', startGame);
+  btnReal.addEventListener('click', () => answer('Real'));
+  btnNot.addEventListener('click', () => answer('Not'));
+  nextBtn.addEventListener('click', nextQ);
+  playAgainBtn.addEventListener('click', startGame);
 }
 
 // ================= START GAME =================
@@ -59,16 +65,18 @@ function startGame() {
 // ================= SHOW QUESTION =================
 function showQ() {
   const q = questions[current];
+  if (!q) return;
+
   document.getElementById('qNum').textContent = current + 1;
   document.getElementById('messageBox').textContent = q.text;
 
   const explanation = document.getElementById('explanation');
   explanation.classList.add('hidden');
-  explanation.textContent = "";
+  explanation.textContent = '';
 
   const nextBtn = document.getElementById('nextBtn');
   nextBtn.disabled = true;
-  nextBtn.style.display = "none";
+  nextBtn.style.display = 'none';
 
   enableButtons(true);
 }
@@ -87,10 +95,10 @@ function answer(choice) {
 
   const nextBtn = document.getElementById('nextBtn');
   nextBtn.disabled = false;
-  nextBtn.style.display = "inline-block";
+  nextBtn.style.display = 'inline-block';
 }
 
-// ================= NEXT QUESTION =================
+// ================= NEXT =================
 function nextQ() {
   current++;
   if (current >= total) endGame();
@@ -100,25 +108,25 @@ function nextQ() {
 // ================= END GAME =================
 function endGame() {
   document.getElementById('questionScreen').classList.add('hidden');
-  const end = document.getElementById('endScreen');
 
+  const end = document.getElementById('endScreen');
   document.getElementById('scoreTitle').textContent = `You scored ${score}/${total}`;
 
-  let msg = "Nice work!";
-  if (score === total) msg = "Perfect! Excellent!";
-  else if (score >= Math.ceil(total * 0.8)) msg = "Great job!";
-  else if (score >= Math.ceil(total * 0.5)) msg = "Not bad — keep practicing!";
-  else msg = "Watch out — more training recommended.";
+  let msg = 'Nice work!';
+  if (score === total) msg = 'Perfect! Excellent!';
+  else if (score >= Math.ceil(total * 0.8)) msg = 'Great job!';
+  else if (score >= Math.ceil(total * 0.5)) msg = 'Not bad — keep practicing!';
+  else msg = 'Watch out — more training recommended.';
 
   document.getElementById('scoreMsg').textContent = msg;
   end.classList.remove('hidden');
 
   if (FLOW_URL) {
     fetch(FLOW_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ playerName, score, timestamp: new Date().toISOString() })
-    }).catch(err => console.warn("Flow error:", err));
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({playerName, score, timestamp: new Date().toISOString()})
+    }).catch(err => console.warn('Flow error:', err));
   }
 
   setTimeout(showBingoCall, 1000);
@@ -127,40 +135,33 @@ function endGame() {
 // ================= BINGO CALL =================
 function showBingoCall() {
   const end = document.getElementById('endScreen');
-
-  var old = document.getElementById('bingoCall');
+  const old = document.getElementById('bingoCall');
   if (old) end.removeChild(old);
 
   const bingo = document.createElement('div');
-  bingo.id = "bingoCall";
-  bingo.style.fontSize = "2em";
-  bingo.style.fontWeight = "bold";
-  bingo.style.textAlign = "center";
-  bingo.style.marginTop = "20px";
+  bingo.id = 'bingoCall';
+  bingo.style.fontSize = '2em';
+  bingo.style.fontWeight = 'bold';
+  bingo.style.textAlign = 'center';
+  bingo.style.marginTop = '20px';
 
-  const text = "BINGO CALL";
+  const text = 'BINGO CALL';
   let i = 0;
   const interval = setInterval(function() {
-    if (i < text.length) {
-      bingo.textContent += text[i++];
-    } else {
-      clearInterval(interval);
-    }
+    if (i < text.length) bingo.textContent += text[i++];
+    else clearInterval(interval);
   }, 200);
 
   end.appendChild(bingo);
 }
 
-// ================= ENABLE / DISABLE BUTTONS =================
+// ================= ENABLE BUTTONS =================
 function enableButtons(ok) {
   document.getElementById('btnReal').disabled = !ok;
   document.getElementById('btnNot').disabled = !ok;
 }
 
 // ================= LOAD =================
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
-} else {
-  init();
-}
+document.addEventListener('DOMContentLoaded', init);
 </script>
+
