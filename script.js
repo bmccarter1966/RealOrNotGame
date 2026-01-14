@@ -1,3 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phish-or-Real Game</title>
+<style>
+.hidden { display: none; }
+button { margin: 5px; padding: 10px 20px; font-size: 16px; }
+#messageBox { margin: 20px 0; font-size: 18px; }
+#explanation { margin-top: 10px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen">
+  <h1>Phish-or-Real Game</h1>
+  <button id="startBtn">Start Game</button>
+</div>
+
+<!-- QUESTION SCREEN -->
+<div id="questionScreen" class="hidden">
+  <div>Question <span id="qNum"></span> / <span id="qTotal"></span></div>
+  <div id="messageBox"></div>
+  <button id="btnPhish">Phish</button>
+  <button id="btnReal">Real</button>
+  <button id="nextBtn" class="hidden">Next</button>
+  <div id="explanation"></div>
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen" class="hidden">
+  <h2 id="scoreTitle"></h2>
+  <div id="scoreMsg"></div>
+  <div id="bingoCall"></div>
+  <button id="playAgainBtn">Play Again</button>
+</div>
+
 <script>
 // ================= QUESTIONS =================
 const QUESTIONS = [
@@ -17,7 +55,7 @@ const QUESTIONS = [
 let questions = [];
 let current = 0;
 let score = 0;
-let total = QUESTIONS.length;
+const total = QUESTIONS.length;
 const playerName = "Anonymous"; // always anonymous
 const FLOW_URL = ""; // optional
 
@@ -32,18 +70,15 @@ function shuffle(arr) {
 
 // ================= INIT =================
 function init() {
-  // Make sure all elements exist
   const startBtn = document.getElementById('startBtn');
+  const btnPhish = document.getElementById('btnPhish');
   const btnReal = document.getElementById('btnReal');
-  const btnNot = document.getElementById('btnNot');
   const nextBtn = document.getElementById('nextBtn');
   const playAgainBtn = document.getElementById('playAgainBtn');
 
-  if (!startBtn || !btnReal || !btnNot || !nextBtn || !playAgainBtn) return;
-
   startBtn.addEventListener('click', startGame);
+  btnPhish.addEventListener('click', () => answer('Phish'));
   btnReal.addEventListener('click', () => answer('Real'));
-  btnNot.addEventListener('click', () => answer('Not'));
   nextBtn.addEventListener('click', nextQ);
   playAgainBtn.addEventListener('click', startGame);
 }
@@ -65,8 +100,6 @@ function startGame() {
 // ================= SHOW QUESTION =================
 function showQ() {
   const q = questions[current];
-  if (!q) return;
-
   document.getElementById('qNum').textContent = current + 1;
   document.getElementById('messageBox').textContent = q.text;
 
@@ -76,7 +109,7 @@ function showQ() {
 
   const nextBtn = document.getElementById('nextBtn');
   nextBtn.disabled = true;
-  nextBtn.style.display = 'none';
+  nextBtn.classList.add('hidden');
 
   enableButtons(true);
 }
@@ -95,7 +128,7 @@ function answer(choice) {
 
   const nextBtn = document.getElementById('nextBtn');
   nextBtn.disabled = false;
-  nextBtn.style.display = 'inline-block';
+  nextBtn.classList.remove('hidden');
 }
 
 // ================= NEXT =================
@@ -129,39 +162,27 @@ function endGame() {
     }).catch(err => console.warn('Flow error:', err));
   }
 
-  setTimeout(showBingoCall, 1000);
+  setTimeout(showBingoCall, 500);
 }
 
 // ================= BINGO CALL =================
 function showBingoCall() {
-  const end = document.getElementById('endScreen');
-  const old = document.getElementById('bingoCall');
-  if (old) end.removeChild(old);
-
-  const bingo = document.createElement('div');
-  bingo.id = 'bingoCall';
-  bingo.style.fontSize = '2em';
-  bingo.style.fontWeight = 'bold';
-  bingo.style.textAlign = 'center';
-  bingo.style.marginTop = '20px';
-
-  const text = 'BINGO CALL';
-  let i = 0;
-  const interval = setInterval(function() {
-    if (i < text.length) bingo.textContent += text[i++];
-    else clearInterval(interval);
-  }, 200);
-
-  end.appendChild(bingo);
+  const bingoDiv = document.getElementById('bingoCall');
+  bingoDiv.textContent = 'BINGO CALL';
+  bingoDiv.style.fontSize = '2em';
+  bingoDiv.style.fontWeight = 'bold';
+  bingoDiv.style.textAlign = 'center';
+  bingoDiv.style.marginTop = '20px';
 }
 
 // ================= ENABLE BUTTONS =================
 function enableButtons(ok) {
+  document.getElementById('btnPhish').disabled = !ok;
   document.getElementById('btnReal').disabled = !ok;
-  document.getElementById('btnNot').disabled = !ok;
 }
 
 // ================= LOAD =================
 document.addEventListener('DOMContentLoaded', init);
 </script>
+
 
