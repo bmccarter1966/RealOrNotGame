@@ -1,43 +1,38 @@
 <script>
-// AI & Security Quiz with Animated Bingo Call and optional Power Automate integration
+// AI & Security Quiz with Animated Bingo Call
 
-let questions = [
+const QUESTIONS = [
   {text: 'AI can fully replace human creativity in art.', answer: 'Not', explanation: 'AI can generate art, but human creativity involves emotions and context.'},
   {text: 'Phishing emails often contain urgent language and suspicious links.', answer: 'Real', explanation: 'Urgency and fake links are classic phishing traits.'},
   {text: "Using '123456' is a strong password.", answer: 'Not', explanation: 'Simple, common passwords are very weak.'},
   {text: 'Smart contracts on blockchain can run without human intervention.', answer: 'Real', explanation: 'Smart contracts execute automatically according to code.'},
   {text: 'AI systems can always perfectly detect deepfakes.', answer: 'Not', explanation: 'Deepfake detection is improving, but not 100% accurate.'},
   {text: 'Two-factor authentication improves account security.', answer: 'Real', explanation: 'Adding a second factor makes accounts harder to compromise.'},
-  {text: 'Sharing your crypto wallet seed phrase is safe with friends.', answer: 'Not', explanation: 'Never share private keys or seed phrases; it gives full access.'},
-  {text: 'Most social engineering attacks exploit human psychology.', answer: 'Real', explanation: 'Attackers manipulate trust and urgency to trick victims.'},
-  {text: 'AI chatbots can sometimes give incorrect or misleading answers.', answer: 'Real', explanation: 'AI generates responses based on data; errors are possible.'},
-  {text: 'A browser lock icon guarantees a website is safe.', answer: 'Not', explanation: 'HTTPS shows encryption, not trustworthiness.'},
-  {text: 'Deepfake videos can be used maliciously for scams.', answer: 'Real', explanation: 'Deepfakes can impersonate people for fraud.'},
-  {text: 'Clicking random links in emails is completely safe if they look professional.', answer: 'Not', explanation: 'Even professional-looking emails can be malicious.'},
-  {text: 'AI can write code but may produce bugs or errors.', answer: 'Real', explanation: 'AI can assist coding but mistakes are possible.'},
-  {text: 'Public Wi-Fi networks are always secure for crypto transactions.', answer: 'Not', explanation: 'Public Wi-Fi can be intercepted; avoid sensitive actions there.'},
-  {text: 'Regularly updating software reduces security vulnerabilities.', answer: 'Real', explanation: 'Updates patch known vulnerabilities, improving security.'}
+  {text: 'Sharing your crypto wallet seed phrase is safe with friends.', answer: 'Not', explanation: 'Never share private keys or seed phrases.'},
+  {text: 'Most social engineering attacks exploit human psychology.', answer: 'Real', explanation: 'Attackers manipulate trust and urgency.'},
+  {text: 'AI chatbots can sometimes give incorrect answers.', answer: 'Real', explanation: 'AI can generate incorrect output.'},
+  {text: 'A browser lock icon guarantees a website is safe.', answer: 'Not', explanation: 'HTTPS does not guarantee trust.'}
 ];
 
+let questions = [];
 let current = 0;
 let score = 0;
-const total = questions.length;
+const total = QUESTIONS.length;
 
-// Fixed anonymous player (no popup)
+// Fixed anonymous player
 const playerName = "Anonymous";
-
-const FLOW_URL = ""; // Optional Power Automate URL
+const FLOW_URL = ""; // optional
 
 // Shuffle helper
-function shuffle(a) {
-  for (let i = a.length - 1; i > 0; i--) {
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return a;
+  return arr;
 }
 
-// Initialize event listeners
+// Init listeners
 function init() {
   document.getElementById('startBtn').addEventListener('click', startGame);
   document.getElementById('btnReal').addEventListener('click', () => answer('Real'));
@@ -46,9 +41,9 @@ function init() {
   document.getElementById('playAgainBtn').addEventListener('click', startGame);
 }
 
-// Start the game
+// Start game (FIXED)
 function startGame() {
-  questions = shuffle([...questions]);
+  questions = shuffle([...QUESTIONS]);   // ✅ FIX
   current = 0;
   score = 0;
 
@@ -60,7 +55,7 @@ function startGame() {
   showQ();
 }
 
-// Show the current question
+// Show question
 function showQ() {
   const q = questions[current];
   document.getElementById('qNum').textContent = current + 1;
@@ -77,15 +72,17 @@ function showQ() {
   enableButtons(true);
 }
 
-// Handle answer selection
+// Answer
 function answer(choice) {
   enableButtons(false);
+
   const q = questions[current];
   const correct = choice === q.answer;
   if (correct) score++;
 
   const explanation = document.getElementById('explanation');
-  explanation.innerHTML = `<strong>${correct ? 'Correct!' : 'Not quite.'}</strong> ${q.explanation}`;
+  explanation.innerHTML =
+    `<strong>${correct ? 'Correct!' : 'Not quite.'}</strong> ${q.explanation}`;
   explanation.classList.remove('hidden');
 
   const nextBtn = document.getElementById('nextBtn');
@@ -93,46 +90,39 @@ function answer(choice) {
   nextBtn.style.display = "inline-block";
 }
 
-// Move to next question
+// Next
 function nextQ() {
   current++;
-  if (current >= total) endGame();
-  else showQ();
+  current >= total ? endGame() : showQ();
 }
 
-// End the game
+// End
 function endGame() {
   document.getElementById('questionScreen').classList.add('hidden');
   const end = document.getElementById('endScreen');
 
-  document.getElementById('scoreTitle').textContent = `You scored ${score}/${total}`;
+  document.getElementById('scoreTitle').textContent =
+    `You scored ${score}/${total}`;
 
-  let msg = "Nice work!";
-  if (score === total) msg = "Perfect! Excellent!";
-  else if (score >= Math.ceil(total * 0.8)) msg = "Great job!";
-  else if (score >= Math.ceil(total * 0.5)) msg = "Not bad — keep practicing!";
-  else msg = "Watch out — more training recommended.";
-
-  document.getElementById('scoreMsg').textContent = msg;
+  document.getElementById('scoreMsg').textContent = "Nice work!";
   end.classList.remove('hidden');
 
-  // Optional Power Automate submit
   if (FLOW_URL) {
     fetch(FLOW_URL, {
       method: "POST",
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         playerName,
         score,
         timestamp: new Date().toISOString()
       })
-    }).catch(err => console.warn("Flow error:", err));
+    });
   }
 
   setTimeout(showBingoCall, 1000);
 }
 
-// Animated Bingo Call
+// Bingo
 function showBingoCall() {
   const end = document.getElementById('endScreen');
   document.getElementById('bingoCall')?.remove();
@@ -143,11 +133,9 @@ function showBingoCall() {
   bingo.style.fontWeight = "bold";
   bingo.style.textAlign = "center";
   bingo.style.marginTop = "20px";
-  end.appendChild(bingo);
 
   const text = "BINGO CALL";
   let i = 0;
-
   const interval = setInterval(() => {
     if (i < text.length) {
       bingo.textContent += text[i++];
@@ -155,6 +143,8 @@ function showBingoCall() {
       clearInterval(interval);
     }
   }, 200);
+
+  end.appendChild(bingo);
 }
 
 // Enable buttons
@@ -166,4 +156,4 @@ function enableButtons(ok) {
 document.addEventListener('DOMContentLoaded', init);
 </script>
 
-
+  
