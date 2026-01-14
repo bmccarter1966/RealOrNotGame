@@ -153,7 +153,7 @@ function showBingoCall() {
   bingo.style.marginTop = "20px";
   end.appendChild(bingo);
 
-  const text = "BINGO CALL"; // You can change this later
+  const text = "I29"; // You can change this later
   bingo.textContent = "";
 
   let index = 0;
