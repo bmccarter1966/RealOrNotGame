@@ -1,3 +1,4 @@
+<script>
 // AI & Security Quiz with Animated Bingo Call and optional Power Automate integration
 
 let questions = [
@@ -21,7 +22,10 @@ let questions = [
 let current = 0;
 let score = 0;
 const total = questions.length;
-let playerName = "";
+
+// Fixed anonymous player (no popup)
+const playerName = "Anonymous";
+
 const FLOW_URL = ""; // Optional Power Automate URL
 
 // Shuffle helper
@@ -44,7 +48,6 @@ function init() {
 
 // Start the game
 function startGame() {
-  playerName = prompt("Enter your name for the leaderboard:", "") || "Anonymous";
   questions = shuffle([...questions]);
   current = 0;
   score = 0;
@@ -102,15 +105,6 @@ function endGame() {
   document.getElementById('questionScreen').classList.add('hidden');
   const end = document.getElementById('endScreen');
 
-  // Optional check mark
-  let checkMark = document.getElementById('checkMark');
-  if (!checkMark) {
-    checkMark = document.createElement('div');
-    checkMark.id = 'checkMark';
-    checkMark.textContent = '✔';
-    end.insertBefore(checkMark, document.getElementById('scoreTitle'));
-  }
-
   document.getElementById('scoreTitle').textContent = `You scored ${score}/${total}`;
 
   let msg = "Nice work!";
@@ -118,32 +112,30 @@ function endGame() {
   else if (score >= Math.ceil(total * 0.8)) msg = "Great job!";
   else if (score >= Math.ceil(total * 0.5)) msg = "Not bad — keep practicing!";
   else msg = "Watch out — more training recommended.";
-  document.getElementById('scoreMsg').textContent = msg;
 
+  document.getElementById('scoreMsg').textContent = msg;
   end.classList.remove('hidden');
 
-  // Send to Power Automate
+  // Optional Power Automate submit
   if (FLOW_URL) {
     fetch(FLOW_URL, {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ playerName, score, timestamp: new Date().toISOString() })
-    }).then(() => {
-      document.getElementById('scoreMsg').textContent += " Your score has been submitted!";
-    }).catch(err => console.warn("Could not send score:", err));
+      body: JSON.stringify({
+        playerName,
+        score,
+        timestamp: new Date().toISOString()
+      })
+    }).catch(err => console.warn("Flow error:", err));
   }
 
-  // Show animated Bingo Call after 1 second
   setTimeout(showBingoCall, 1000);
 }
 
 // Animated Bingo Call
 function showBingoCall() {
   const end = document.getElementById('endScreen');
-
-  // Remove old bingo call if exists
-  const old = document.getElementById('bingoCall');
-  if (old) old.remove();
+  document.getElementById('bingoCall')?.remove();
 
   const bingo = document.createElement('div');
   bingo.id = "bingoCall";
@@ -153,33 +145,25 @@ function showBingoCall() {
   bingo.style.marginTop = "20px";
   end.appendChild(bingo);
 
-  const text = "BINGO CALL"; // You can change this later
-  bingo.textContent = "";
+  const text = "BINGO CALL";
+  let i = 0;
 
-  let index = 0;
   const interval = setInterval(() => {
-    if (index < text.length) {
-      bingo.textContent += text[index];
-      index++;
+    if (i < text.length) {
+      bingo.textContent += text[i++];
     } else {
       clearInterval(interval);
-
-      // Flash letters a few times
-      let flashCount = 0;
-      const flashInterval = setInterval(() => {
-        bingo.style.visibility = (bingo.style.visibility === "hidden") ? "visible" : "hidden";
-        flashCount++;
-        if (flashCount >= 6) clearInterval(flashInterval); // 3 flashes
-      }, 300);
     }
-  }, 200); // 200ms between letters
+  }, 200);
 }
 
-// Enable or disable buttons
+// Enable buttons
 function enableButtons(ok) {
   document.getElementById('btnReal').disabled = !ok;
   document.getElementById('btnNot').disabled = !ok;
 }
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', init);
+</script>
+
+
